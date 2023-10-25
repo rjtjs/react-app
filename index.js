@@ -1,7 +1,9 @@
 const express = require('express')
+const cors = require('cors')
 const app = express()
 
 app.use(express.json())
+app.use(cors())
 
 let notes = [
   {
@@ -35,7 +37,7 @@ app.get('/api/notes', (request, response) => {
 })
 
 app.get('/api/notes/:id', (request, response) => {
-  const id = request.params.id
+  const id = Number(request.params.id)
   const note = notes.find((note) => note.id === id)
   response.json(note)
 })
@@ -57,11 +59,27 @@ app.post('/api/notes', (request, response) => {
 
   notes = notes.concat(note)
 
-  if (note) {
-    response.json(note)
-  } else {
-    response.status(404).end()
+  response.json(note)
+})
+
+app.put('/api/notes/:id', (request, response) => {
+  const body = request.body
+
+  if (!body.content) {
+    return response.status(400).json({
+      error: 'missing content'
+    })
   }
+
+  const note = {
+    content: body.content,
+    important: body.important || false,
+    id: request.params.id
+  }
+
+  notes = notes.map((n) => (n.id !== note.id ? n : note))
+
+  response.json(note)
 })
 
 app.delete('/api/notes/:id', (request, response) => {
@@ -70,6 +88,12 @@ app.delete('/api/notes/:id', (request, response) => {
 
   response.status(204).end()
 })
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
 
 const PORT = 3001
 app.listen(PORT, () => {
