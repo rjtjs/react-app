@@ -19,11 +19,9 @@ const testNotes = [
 beforeEach(async () => {
   await Note.deleteMany({})
 
-  let noteObj = new Note(testNotes[0])
-  await noteObj.save()
-
-  noteObj = new Note(testNotes[1])
-  await noteObj.save()
+  const testNoteObjs = testNotes.map((n) => new Note(n))
+  const promises = testNoteObjs.map((n) => n.save())
+  await Promise.all(promises)
 })
 
 test('all notes are returned', async () => {
