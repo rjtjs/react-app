@@ -80,6 +80,7 @@ test('a specific note can be viewed', async () => {
     .get(`/api/notes/${noteToCheck.id}`)
     .expect(200)
     .expect('Content-Type', /application\/json/)
+
   expect(noteResponse.body).toEqual(noteToCheck)
 })
 

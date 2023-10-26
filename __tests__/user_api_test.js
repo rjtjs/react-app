@@ -48,5 +48,20 @@ describe('test POST', () => {
     expect(result.body.username).toEqual('testuser3')
   })
 
-  test('')
+  test('reject request if user already exists', async () => {
+    const response = await api.get('/api/users')
+    const usernames = response.body.map((u) => u.username)
+
+    const repeatedUser = {
+      username: usernames[0],
+      name: 'testname4',
+      password: 'testpass4'
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(repeatedUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+  })
 })
