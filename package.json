@@ -4,19 +4,21 @@
   "description": "first react based blog-like site",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node index.js",
-    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "start": "cross-env NODE_ENV=prod node index.js",
+    "dev": "cross-env NODE_ENV=test nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
-    "build:ui": "rm -rf dist && cd ../react-sandbox && npm run build && cp -r dist ../react-backend"
+    "build:ui": "rm -rf dist && cd ../react-frontend && npm run build && cp -r dist ../react-app"
   },
   "author": "rjtjs",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
     "mongoose": "^7.6.3",
+    "mongoose-unique-validator": "^4.0.0",
     "save-dev": "^0.0.1-security",
     "supertest": "^6.3.3"
   },
@@ -26,6 +28,7 @@
     "nodemon": "^3.0.1"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "globalTeardown": "./global-teardown.js"
   }
 }

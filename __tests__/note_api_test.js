@@ -24,6 +24,11 @@ beforeEach(async () => {
   await Promise.all(promises)
 })
 
+afterAll(async () => {
+  await Note.deleteMany({})
+  await mongoose.connection.close()
+})
+
 test('all notes are returned', async () => {
   const response = await api.get('/api/notes')
 
@@ -90,9 +95,4 @@ test('a note can be deleted', async () => {
 
   const remainingContent = remainingNotes.body.map((n) => n.content)
   expect(remainingContent).not.toContain(noteToDelete.content)
-})
-
-afterAll(async () => {
-  await Note.deleteMany({})
-  await mongoose.connection.close()
 })
